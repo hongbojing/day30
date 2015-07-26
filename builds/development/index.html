@@ -1,13 +1,155 @@
-<!doctype html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <title>day #</title>
-  <link rel="stylesheet" href="css/myStyle.css">
-  <link rel="stylesheet" href="css/anotherstyle.css">
-</head>
-<body>
+<!DOCTYPE html>
+<html lang="en" ng-app="gemStore">
+
+  <head>
+    <meta charset="UTF-8">
+    <title>Document</title>
+    <link rel="stylesheet" href="http://cdn.bootcss.com/bootstrap/3.3.2/css/bootstrap.min.css">
+
+    <link rel="stylesheet" href="http://cdn.bootcss.com/bootstrap/3.3.2/css/bootstrap-theme.min.css">
+    <link rel="stylesheet" href="css/anotherstyle.css">
+
+  </head>
+
+  <body ng-controller="StoreController as store">
 
 
-</body>
+    <div class="jumbotron">
+      <div class="container">
+        <h1>Hello, angular world!</h1>
+        <h2>{{"Welcome to Hongbo's Gem Store"}}</h2>
+        <p>Please feel free to look around and enjoy yourself</p>
+        <p><a class="btn btn-primary btn-lg" href="#" role="button">Learn more</a>
+        </p>
+      </div>
+    </div>
+
+    <div class="container">
+
+      <div class="list-group-item" ng-repeat="product in store.products">
+        <!--Product Container-->
+        <h3>{{product.name}}
+          <em class="pull-right">{{product.price | currency}}</em>
+        </h3>
+
+
+
+        <section ng-show="product.images.length" ng-controller="GalleryController as gallery">
+
+          <img ng-src="{{product.images[gallery.current]}}" width="500px" height="500px" />
+          <ul class="list-inline thumbs">
+
+            <li class="thumbnail" ng-repeat="image in product.images">
+
+              <img ng-src="{{image}}" width="150px" height="100%" />
+            </li>
+          </ul>
+        </section>
+
+
+        <section class="tab" ng-controller="TabController as tabcon">
+          <ul class="nav nav-pills">
+
+
+            <li ng-class="{active:tabcon.isSet(1)}">
+
+              <a href ng-click="tabcon.setTab(1)">Description</a>
+            </li>
+            <li ng-class="{active:tabcon.isSet(2)}">
+              <a href ng-click="tabcon.setTab(2)">Specs</a>
+            </li>
+            <li ng-class="{active:tabcon.isSet(3)}">
+              <a href ng-click="tabcon.setTab(3)">Reviews</a>
+            </li>
+          </ul>
+
+          <div>
+            <!--0002Include the file on the page using a custom directive tag instead of ng-include. &
+You need to make sure you keep the ng-show directive on your new product-description element.-->
+            <product-description ng-show="tabcon.isSet(1)"></product-description>
+          </div>
+
+
+          <div ng-show="tabcon.isSet(2)">
+            <h4>Specs</h4>
+            <blockquote>Shine: {{product.shine}}</blockquote>
+          </div>
+
+
+          <div ng-show="tabcon.isSet(3)">
+            <ul>
+              <h4>Reviews</h4>
+              <!--01-You need to create multiple li's for each review that exists.-->
+              <li ng-repeat="review in product.reviews">
+                <blackquote>
+                  <!--02-Set the blockquote stars (strong tag) to the review stars.-->
+                  <strong>{{review.stars}} Stars</strong>
+                  <!--03-Add the review body between the strong & cite tags.-->
+                  {{review.body}}
+                  <!--04-Set the cite to the review author.-->
+                  <!--002-In the review template, we're already displaying most of the information about our review. Add the createdOn date to the review within the cite element. We want it to say "-<Author> on <date>".
+003-Use the date filter on the createdOn property in the template.-->
+                  <cite class="clearfix">-{{review.author}} on {{review.createdOn | date}}</cite>
+                </blackquote>
+              </li>
+            </ul>
+            <!--Review Form-->
+            <!--submit part
+001-Turn off default HTML validation.
+
+002-Mark stars & author as required fields.
+
+003-Prevent the submit if not $valid.notice the location that you add the code
+-->
+            <form name="reviewForm" ng-controller="ReviewController as reviewCtrl" ng-submit="reviewForm.$valid&&reviewCtrl.addReview(product)" novalidate>
+              <!--Live Review-->
+              <!--08-Set the first field to review.stars-->
+
+              <blockquote>
+                <strong>{{reviewCtrl.review.stars}} Stars</strong>
+                <!--09-Set the next field to review.body-->
+
+                {{reviewCtrl.review.body}}
+                <!--10-Set the last field to review.author-->
+                <cite class="clearfix">-{{reviewCtrl.review.author}}</cite>
+              </blockquote>
+              <h4>submit a form</h4>
+              <!--05-Use ng-model for review.stars select form field.-->
+              <fieldset class="form-group">
+                <select name="" id="" class="form-control" ng-model="reviewCtrl.review.stars" ng-options="stars for stars in [5,4,3,2,1,'hongbo']" title="Stars" required>
+                  <option value="">Rate the Product</option>
+                </select>
+              </fieldset>
+
+              <!--06-Use ng-model for review.body for the forms textarea.-->
+              <fieldset class="form-group">
+                <textarea class="form-control" ng-model="reviewCtrl.review.body" placeholder="Write a short review of the product..." title="Review"></textarea>
+              </fieldset>
+
+              <!--07-Use ng-model for review.author – the email field.-->
+              <fieldset class="form-group">
+                <input type="email" class="form-control" ng-model="reviewCtrl.review.author" placeholder="jimmyDean@example.org" title="Email" required/>
+              </fieldset>
+
+              <fieldset class="form-group">
+                <input type="submit" class="btn btn-primary pull-right" value="Submit Review" />
+              </fieldset>
+            </form>
+
+
+
+
+
+          </div>
+        </section>
+      </div>
+    </div>
+
+
+
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.14/angular.min.js"></script>
+    <script src="js/lib/app.js"></script>
+
+  </body>
+
 </html>

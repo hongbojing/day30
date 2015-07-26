@@ -34,3 +34,17 @@ pre.center{
     border: #F2773F solid;
 }
 
+
+.row-3-6{
+    display: inline-block;
+}
+/*
+01-For elements with both the .ng-invalid and .ng-dirty classes, give the border-color of red.
+02-For ng-valid && ng-dirty, give a green border-color.
+*/
+.ng-invalid.ng-dirty{
+    border-color: red;
+}
+.ng-valid.ng-dirty{
+    border-color: green;
+}
